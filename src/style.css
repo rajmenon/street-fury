@@ -339,8 +339,74 @@ h2 {
   top: 88px;
   font-family: "Black Ops One", Oswald, sans-serif;
   font-size: 28px;
-  color: #fff1c2;
+  color: #3ee0d8;
   text-shadow: 0 0 12px rgba(255, 80, 40, 0.8);
+}
+
+.train-panel {
+  position: absolute;
+  right: 24px;
+  top: 88px;
+  width: 220px;
+  padding: 14px 16px 12px;
+  background: rgba(8, 4, 10, 0.72);
+  border: 2px solid var(--gold);
+  pointer-events: none;
+}
+
+.train-kicker {
+  margin: 0;
+  letter-spacing: 0.28em;
+  font-size: 11px;
+  color: var(--gold);
+}
+
+.train-policy {
+  margin: 6px 0 2px;
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+}
+
+.train-blurb {
+  margin: 0 0 12px;
+  color: #c7b29e;
+  letter-spacing: 0.06em;
+  font-size: 13px;
+}
+
+.train-stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.train-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.train-stats dt {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #c7b29e;
+}
+
+.train-stats dd {
+  margin: 0;
+  font-size: 16px;
+  color: var(--cyan);
+}
+
+.train-keys {
+  margin: 12px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #d8c7b4;
+  text-transform: uppercase;
 }
 
 .banner {
