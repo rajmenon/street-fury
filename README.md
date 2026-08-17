@@ -24,8 +24,12 @@ Then open the URL Vite prints (usually `http://localhost:5173`).
 | **/** | Roundhouse kick |
 | Enter | Confirm / rematch |
 | Esc | Back / change fighter |
+| **C** | Training: cycle dummy policy |
+| **R** | Training: reset the round |
 
-Movement is **arrow keys only** — no WASD. After you pick a fighter you pick **Easy / Medium / Hard**. Rematch keeps the same difficulty.
+Movement is **arrow keys only** — no WASD. After you pick a fighter you pick **Easy / Medium / Hard / Train**. Rematch keeps the same difficulty.
+
+**Train** gives you a dummy partner instead of the CPU. The dummy can stand, block, or try to punish. There is no KO ending — press **R** to reset.
 
 - **Easy** — CPU is slower, delayed, and deals less damage.
 - **Medium** — even fight.
