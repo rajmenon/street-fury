@@ -2,7 +2,10 @@
 
 **Goal:** show that a large AI-assisted change is reviewable when it is a GitHub stack, and that Grok skills do the mechanical review work so humans keep the judgment.
 
-**Repo:** this Street Fury tree. **Feature:** Training Mode.
+**Repo:** https://github.com/rajmenon/street-fury  
+**Feature:** Training Mode  
+**Stack:** [#1 session](https://github.com/rajmenon/street-fury/pull/1) → [#2 dummy](https://github.com/rajmenon/street-fury/pull/2) → [#3 HUD](https://github.com/rajmenon/street-fury/pull/3) → [#4 wire](https://github.com/rajmenon/street-fury/pull/4)  
+**Giant compare:** https://github.com/rajmenon/street-fury/compare/main...train/wire
 
 ## Setup (before the room)
 

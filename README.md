@@ -65,12 +65,14 @@ This repo is the live demo for **GitHub stacked pull requests** plus Grok review
 
 The product change under review is **Training Mode**: a dummy partner, combo recorder, training HUD, and fight-loop wiring. That is the kind of feature an agent will dump as one 400–600 line PR. Here it is a stack of four pull requests instead.
 
-| Layer | Branch | What a reviewer sees |
-| --- | --- | --- |
-| 1 | `train/session` | Session model, policies, combo recorder, tests. No UI. |
-| 2 | `train/dummy` | Dummy stand / block / punish brain. No HUD. |
-| 3 | `train/hud` | Overlay markup and CSS. No combat changes. |
-| 4 | `train/wire` | Difficulty → TRAIN path, keys, fight-loop hookup. |
+| Layer | Branch | PR | What a reviewer sees |
+| --- | --- | --- | --- |
+| 1 | `train/session` | [#1](https://github.com/rajmenon/street-fury/pull/1) | Session model, policies, combo recorder, tests. No UI. |
+| 2 | `train/dummy` | [#2](https://github.com/rajmenon/street-fury/pull/2) | Dummy stand / block / punish brain. No HUD. |
+| 3 | `train/hud` | [#3](https://github.com/rajmenon/street-fury/pull/3) | Overlay markup and CSS. No combat changes. |
+| 4 | `train/wire` | [#4](https://github.com/rajmenon/street-fury/pull/4) | Difficulty → TRAIN path, keys, fight-loop hookup. |
+
+Giant compare (do not review this): https://github.com/rajmenon/street-fury/compare/main...train/wire
 
 Review **bottom-up**. Open any pull request to see only that layer’s diff. The stack map at the top of each PR shows where you are.
 
