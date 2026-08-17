@@ -265,6 +265,10 @@ h2 {
   border-color: #e23b3b;
 }
 
+.diff-card[data-id="train"].selected {
+  border-color: var(--cyan);
+}
+
 .fight-ui {
   display: flex;
   flex-direction: column;

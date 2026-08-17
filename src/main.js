@@ -7,6 +7,9 @@ import { loadGameTextures } from "./textures.js";
 import { createArena } from "./arena.js";
 import { Fighter, overlapping, STAGE_MIN, STAGE_MAX } from "./fighter.js";
 import { think, resetAi } from "./ai.js";
+import { createSession, cyclePolicy, recordConnect, recordWhiffOrBlock, resetRound, policyLabel } from "./training.js";
+import { thinkDummy } from "./dummy.js";
+import { bindTrainingHud, renderTrainingHud, setTrainingHudVisible } from "./trainingHud.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -58,6 +61,11 @@ let combo = 0;
 let comboT = 0;
 let sparks = [];
 let roundLocked = false;
+let training = false;
+let session = null;
+let trainHud = null;
+
+const SELECT_ORDER = [...DIFFICULTY_ORDER, "train"];
 
 function show(name) {
   mode = name;
@@ -120,13 +128,15 @@ function paintDifficulty() {
   });
 }
 
-function startFight(playerId) {
+function startFight(playerId, opts = {}) {
   clearFighters();
   resetAi();
-  const diff = currentDifficulty();
+  training = Boolean(opts.training || difficultyId === "train");
+  session = training ? createSession() : null;
+  const diff = training ? DIFFICULTIES.medium : currentDifficulty();
   const cpuId = OTHER[playerId];
   p1 = new Fighter(tuneSpec(ROSTER[playerId], diff, false), "p1", textures);
-  p2 = new Fighter(tuneSpec(ROSTER[cpuId], diff, true), "p2", textures);
+  p2 = new Fighter(tuneSpec(ROSTER[cpuId], diff, training ? false : true), "p2", textures);
   scene.add(p1.root, p2.root);
   p1.syncTransform();
   p2.syncTransform();
@@ -137,11 +147,36 @@ function startFight(playerId) {
   hud.p1Name.textContent = p1.spec.name;
   hud.p2Name.textContent = p2.spec.name;
   hud.combo.classList.add("hidden");
-  $("p2-tag").textContent = `CPU · ${diff.name}`;
+  $("p2-tag").textContent = training ? `DUMMY · ${policyLabel(session)}` : `CPU · ${diff.name}`;
+  setTrainingHudVisible(trainHud, training);
+  if (training) renderTrainingHud(trainHud, session);
   show("fight");
-  showBanner("FIGHT!", 1.15);
+  showBanner(training ? "TRAIN" : "FIGHT!", 1.15);
   play("go", { volume: 0.9 });
   startMusic();
+}
+
+function resetTrainingRound() {
+  if (!training || !p1 || !p2 || !session) return;
+  p1.health = p1.maxHealth;
+  p2.health = p2.maxHealth;
+  p1.x = -2.5;
+  p2.x = 2.5;
+  p1.y = 0;
+  p2.y = 0;
+  p1.vy = 0;
+  p2.vy = 0;
+  p1.air = false;
+  p2.air = false;
+  p1.setState("idle");
+  p2.setState("idle");
+  p1.syncTransform();
+  p2.syncTransform();
+  resetRound(session);
+  combo = 0;
+  comboT = 0;
+  renderTrainingHud(trainHud, session);
+  showBanner("RESET", 0.7);
 }
 
 function finishRound(title, sub) {
@@ -172,20 +207,25 @@ function resolveHits() {
     if (blocked) {
       play("block", { volume: 0.9, rate: 0.95 + Math.random() * 0.1 });
       combo = 0;
+      if (training && session && atk.side === "p1") recordWhiffOrBlock(session);
     } else {
       play("hit", { volume: 1, rate: 0.9 + Math.random() * 0.18 });
       if (atk.side === "p1") {
         combo += 1;
         comboT = 1.4;
+        if (training && session) recordConnect(session, box.kind);
       } else {
         combo = 0;
       }
     }
+    if (training && session) renderTrainingHud(trainHud, session);
     if (result.ko) {
       play("ko", { volume: 1 });
       showBanner("K.O.", 2);
-      const win = def.side === "p2";
-      finishRound(win ? "YOU WIN" : "YOU LOSE", "KNOCKOUT");
+      if (!training) {
+        const win = def.side === "p2";
+        finishRound(win ? "YOU WIN" : "YOU LOSE", "KNOCKOUT");
+      }
     }
   }
 }
@@ -244,13 +284,13 @@ function updateSelect() {
 
 function updateDifficulty() {
   if (consume("left")) {
-    const idx = DIFFICULTY_ORDER.indexOf(difficultyId);
-    difficultyId = DIFFICULTY_ORDER[(idx - 1 + DIFFICULTY_ORDER.length) % DIFFICULTY_ORDER.length];
+    const idx = SELECT_ORDER.indexOf(difficultyId);
+    difficultyId = SELECT_ORDER[(idx - 1 + SELECT_ORDER.length) % SELECT_ORDER.length];
     play("select", { volume: 0.7 });
     paintDifficulty();
   } else if (consume("right")) {
-    const idx = DIFFICULTY_ORDER.indexOf(difficultyId);
-    difficultyId = DIFFICULTY_ORDER[(idx + 1) % DIFFICULTY_ORDER.length];
+    const idx = SELECT_ORDER.indexOf(difficultyId);
+    difficultyId = SELECT_ORDER[(idx + 1) % SELECT_ORDER.length];
     play("select", { volume: 0.7 });
     paintDifficulty();
   }
@@ -285,8 +325,18 @@ function updateFight(dt) {
     }
   }
 
+  if (training && consume("reset")) resetTrainingRound();
+  if (training && consume("cycle") && session) {
+    cyclePolicy(session);
+    $("p2-tag").textContent = `DUMMY · ${policyLabel(session)}`;
+    renderTrainingHud(trainHud, session);
+    play("select", { volume: 0.55 });
+  }
+
   const playerCmd = playerInput();
-  const cpuCmd = think(p2, p1, clock.elapsedTime, dt, currentDifficulty());
+  const cpuCmd = training
+    ? thinkDummy(p2, p1, session)
+    : think(p2, p1, clock.elapsedTime, dt, currentDifficulty());
   p1.update(dt, playerCmd, p2);
   p2.update(dt, cpuCmd, p1);
   for (const fighter of [p1, p2]) {
@@ -311,8 +361,11 @@ function updateFight(dt) {
 
   if (consume("back") && !roundLocked) {
     stopMusic();
-    show("select");
+    setTrainingHudVisible(trainHud, false);
+    show(training ? "difficulty" : "select");
     clearFighters();
+    training = false;
+    session = null;
   }
 }
 
@@ -349,6 +402,7 @@ function resize() {
 
 async function boot() {
   bindInput();
+  trainHud = bindTrainingHud();
   window.addEventListener("resize", resize);
   $("btn-start").addEventListener("click", () => {
     unlockAudio().then(() => play("select", { volume: 0.8 }));

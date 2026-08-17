@@ -9,6 +9,8 @@ const MAP = {
   Enter: "start",
   Space: "start",
   Escape: "back",
+  KeyR: "reset",
+  KeyC: "cycle",
 };
 
 function actionFromEvent(event) {
