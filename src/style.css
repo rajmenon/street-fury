@@ -1,0 +1,417 @@
+:root {
+  --ink: #140814;
+  --plum: #2a1528;
+  --gold: #f0c14b;
+  --red: #e23b3b;
+  --cyan: #3ee0d8;
+  --paper: #f6efe4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #07040a;
+  color: var(--paper);
+  font-family: Oswald, Impact, sans-serif;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.title-bg {
+  position: absolute;
+  inset: 0;
+  background: url("/assets/textures/title-street.jpg") center / cover no-repeat;
+  filter: saturate(1.1) contrast(1.05);
+}
+
+.title-shade,
+.select-shade,
+.result-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 2, 10, 0.35) 0%,
+    rgba(8, 2, 10, 0.55) 40%,
+    rgba(8, 2, 10, 0.82) 100%
+  );
+}
+
+.title-stack,
+.select-wrap,
+.result-stack {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+}
+
+.eyebrow {
+  letter-spacing: 0.42em;
+  font-size: 13px;
+  color: var(--gold);
+  margin: 0 0 10px;
+}
+
+h1 {
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: clamp(64px, 12vw, 140px);
+  line-height: 0.88;
+  margin: 0;
+  color: #fff6e8;
+  text-shadow:
+    0 0 24px rgba(226, 59, 59, 0.55),
+    0 8px 0 #7a1420,
+    0 18px 40px rgba(0, 0, 0, 0.65);
+}
+
+.tag {
+  margin: 16px 0 34px;
+  letter-spacing: 0.38em;
+  font-size: 16px;
+  color: var(--cyan);
+}
+
+h2 {
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: clamp(36px, 6vw, 64px);
+  margin: 0 0 28px;
+  letter-spacing: 0.06em;
+}
+
+.btn-xl,
+.btn-ghost {
+  pointer-events: auto;
+  cursor: pointer;
+  border: 0;
+  font-family: Oswald, sans-serif;
+  letter-spacing: 0.22em;
+}
+
+.btn-xl {
+  background: linear-gradient(180deg, #ff4d4d, #b21616);
+  color: #fff8ee;
+  padding: 14px 34px;
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow:
+    0 0 0 3px #1a0508,
+    0 0 0 6px var(--gold),
+    0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.btn-xl:hover {
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  margin-top: 16px;
+  background: transparent;
+  color: #d7c8b6;
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.hint {
+  margin-top: 22px;
+  color: #c9b7a4;
+  letter-spacing: 0.12em;
+  font-size: 14px;
+}
+
+.roster {
+  display: flex;
+  gap: 28px;
+  pointer-events: auto;
+}
+
+.card {
+  width: min(34vw, 340px);
+  background: #120810;
+  border: 3px solid #4a3044;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  overflow: hidden;
+  transform: scale(0.96);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.card-meta {
+  padding: 12px 14px 16px;
+  text-align: left;
+  background: linear-gradient(180deg, #1a0d18, #0c070c);
+}
+
+.card-meta h3 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+}
+
+.card-meta p {
+  margin: 4px 0 0;
+  color: #c7b29e;
+  letter-spacing: 0.06em;
+}
+
+.card.selected {
+  transform: scale(1);
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 2px #1a0508,
+    0 0 28px rgba(240, 193, 75, 0.35),
+    0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+.diff-row {
+  display: flex;
+  gap: 18px;
+  pointer-events: auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.diff-card {
+  width: min(28vw, 240px);
+  min-height: 168px;
+  background: #120810;
+  border: 3px solid #4a3044;
+  color: var(--paper);
+  cursor: pointer;
+  padding: 28px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: Oswald, sans-serif;
+  transform: scale(0.96);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.diff-name {
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.1em;
+}
+
+.diff-blurb {
+  color: #c7b29e;
+  letter-spacing: 0.06em;
+  font-size: 14px;
+  max-width: 16ch;
+}
+
+.diff-card.selected {
+  transform: scale(1);
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 2px #1a0508,
+    0 0 28px rgba(240, 193, 75, 0.35);
+}
+
+.diff-card[data-id="easy"].selected {
+  border-color: #6cff8a;
+}
+
+.diff-card[data-id="hard"].selected {
+  border-color: #e23b3b;
+}
+
+.fight-ui {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 18px 24px 0;
+}
+
+.fighter-hud .name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+  letter-spacing: 0.14em;
+  font-size: 20px;
+}
+
+.fighter-hud.right .name-row {
+  flex-direction: row;
+}
+
+#p1-tag,
+#p2-tag {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+}
+
+.bar {
+  height: 22px;
+  background: #1a0b12;
+  border: 2px solid #f3e2c3;
+  box-shadow: 0 0 0 2px #12080c;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transition: transform 0.08s linear;
+}
+
+.bar-fill.p1 {
+  background: linear-gradient(180deg, #6cff8a, #1f9a3d 55%, #0d5c22);
+}
+
+.bar-fill.p2 {
+  background: linear-gradient(180deg, #ff7a4d, #d3261b 55%, #7a1010);
+  margin-left: auto;
+  transform-origin: right center;
+}
+
+.timer {
+  min-width: 78px;
+  text-align: center;
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: 42px;
+  color: var(--gold);
+  text-shadow: 0 3px 0 #3a2208;
+  padding-top: 6px;
+}
+
+.combo {
+  position: absolute;
+  left: 28px;
+  top: 88px;
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: 28px;
+  color: #fff1c2;
+  text-shadow: 0 0 12px rgba(255, 80, 40, 0.8);
+}
+
+.banner {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  font-family: "Black Ops One", Oswald, sans-serif;
+  font-size: clamp(52px, 9vw, 110px);
+  letter-spacing: 0.08em;
+  color: #fff8ea;
+  text-shadow:
+    0 0 20px rgba(226, 59, 59, 0.7),
+    0 6px 0 #6b1320;
+  animation: pop 0.35s ease-out;
+}
+
+.help {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  padding: 16px 20px 22px;
+  color: #d8c7b4;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.45));
+}
+
+#boot {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: #07040a;
+  font-family: "Black Ops One", Oswald, sans-serif;
+  letter-spacing: 0.2em;
+}
+
+#boot.hidden {
+  display: none;
+}
+
+@keyframes pop {
+  from {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .roster {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: min(78vw, 300px);
+  }
+
+  .diff-card {
+    width: min(78vw, 300px);
+  }
+
+  .help {
+    flex-wrap: wrap;
+  }
+}

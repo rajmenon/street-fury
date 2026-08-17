@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STREET FURY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+
+    <div id="ui">
+      <section id="screen-title" class="screen">
+        <div class="title-bg"></div>
+        <div class="title-shade"></div>
+        <div class="title-stack">
+          <p class="eyebrow">SINGLE PLAYER</p>
+          <h1>STREET FURY</h1>
+          <p class="tag">3D STREET FIGHTING</p>
+          <button id="btn-start" class="btn-xl" type="button">PRESS ENTER</button>
+          <p class="hint">Arrows move · back or ↓ block · &lt; punch · &gt; kick · / roundhouse</p>
+        </div>
+      </section>
+
+      <section id="screen-select" class="screen hidden">
+        <div class="select-shade"></div>
+        <div class="select-wrap">
+          <p class="eyebrow">CHOOSE YOUR FIGHTER</p>
+          <h2>SINGLE PLAYER</h2>
+          <div class="roster" id="roster">
+            <article class="card selected" data-id="dragon" tabindex="0">
+              <img src="/assets/portraits/dragon.jpg" alt="Dragon" />
+              <div class="card-meta">
+                <h3>DRAGON</h3>
+                <p>Jeet Kune Do · Fast kicks</p>
+              </div>
+            </article>
+            <article class="card" data-id="iron" tabindex="0">
+              <img src="/assets/portraits/iron.jpg" alt="Iron" />
+              <div class="card-meta">
+                <h3>IRON</h3>
+                <p>Heavyweight · Crushing punches</p>
+              </div>
+            </article>
+          </div>
+          <p class="hint">← → to switch · ENTER for difficulty · ESC back</p>
+        </div>
+      </section>
+
+      <section id="screen-difficulty" class="screen hidden">
+        <div class="select-shade"></div>
+        <div class="select-wrap">
+          <p class="eyebrow">SINGLE PLAYER</p>
+          <h2>DIFFICULTY</h2>
+          <div class="diff-row" id="diff-row">
+            <button class="diff-card" data-id="easy" type="button">
+              <span class="diff-name">EASY</span>
+              <span class="diff-blurb">CPU hesitates and hits softer</span>
+            </button>
+            <button class="diff-card selected" data-id="medium" type="button">
+              <span class="diff-name">MEDIUM</span>
+              <span class="diff-blurb">A fair street fight</span>
+            </button>
+            <button class="diff-card" data-id="hard" type="button">
+              <span class="diff-name">HARD</span>
+              <span class="diff-blurb">CPU hunts, blocks, and punishes</span>
+            </button>
+          </div>
+          <p class="hint">← → to switch · ENTER to fight · ESC back</p>
+        </div>
+      </section>
+
+      <section id="screen-fight" class="screen hidden fight-ui">
+        <div class="hud">
+          <div class="fighter-hud left">
+            <div class="name-row">
+              <span id="p1-name">DRAGON</span>
+              <span id="p1-tag">YOU</span>
+            </div>
+            <div class="bar">
+              <div id="p1-hp" class="bar-fill p1"></div>
+            </div>
+          </div>
+          <div class="timer" id="timer">99</div>
+          <div class="fighter-hud right">
+            <div class="name-row">
+              <span id="p2-tag">CPU · MEDIUM</span>
+              <span id="p2-name">IRON</span>
+            </div>
+            <div class="bar">
+              <div id="p2-hp" class="bar-fill p2"></div>
+            </div>
+          </div>
+        </div>
+        <div id="combo" class="combo hidden">2 HIT</div>
+        <div id="banner" class="banner hidden"></div>
+        <div class="help">
+          <span>← → move</span>
+          <span>↑ jump</span>
+          <span>↓ or back block</span>
+          <span>&lt; punch</span>
+          <span>&gt; kick</span>
+          <span>/ roundhouse</span>
+        </div>
+      </section>
+
+      <section id="screen-result" class="screen hidden">
+        <div class="result-shade"></div>
+        <div class="result-stack">
+          <p class="eyebrow" id="result-sub">KNOCKOUT</p>
+          <h2 id="result-title">YOU WIN</h2>
+          <div class="result-actions">
+            <button id="btn-rematch" class="btn-xl" type="button">REMATCH · ENTER</button>
+            <button id="btn-roster" class="btn-ghost" type="button">CHANGE FIGHTER · ESC</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="boot">
+      <p>LOADING THE STREET…</p>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
